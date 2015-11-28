@@ -1,0 +1,55 @@
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html;charset=UTF-8">
+<title>CSVファイルを表示する</title>
+<script type="text/javascript" src="xmlhttp.js"></script>
+<script type="text/javascript"><!--
+function loadDataFile(fName)
+{
+	httpObj = createXMLHttpRequest(displayData);
+	if (httpObj)
+	{
+		httpObj.open("GET",fName,true);
+		httpObj.send(null);
+	}
+}
+function displayData()
+{
+	if ((httpObj.readyState == 4) && (httpObj.status == 200))
+	{
+		$("result").innerHTML = parseTabText(httpObj.responseText);
+	}else{
+		$("result").innerHTML = "<b>Loading...</b>";
+	}
+}
+// CSVファイルを解析して表示
+function parseTabText(tabText)
+{
+	var resultText = "<table border='1' cellspacing='0'>";
+	var CR = String.fromCharCode(13);	// 改行コード (CR)
+	lineData = tabText.split(CR);
+	for (var i=0; i<lineData.length; i++)
+	{
+		wCount = lineData[i].split(",");
+		resultText += "<tr>";
+		for (j=0; j<wCount.length; j++)
+		{
+			tData = wCount[j];	// データ
+			resultText += "<td>"+tData + "</td>";
+		}
+		resultText += "</tr>";
+	}
+	resultText += "</table>";
+	return resultText;
+}
+// --></script>
+</head>
+<body>
+<h1>CSVファイルを表示する</h1>
+<p>CSVファイルを読み込み表示します</p>
+<form name="ajaxForm">
+<input type="button" value="sample.csvファイルを読み込み" onClick="loadDataFile('https://github.com/TatsuakiS/JPHack_data/blob/master/sample.csv')"><br>
+</form>
+<div id="result"></div>
+</body>
+</html>
